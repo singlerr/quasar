@@ -1,0 +1,79 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group 'io.github.singlerr'
+version '1.0.0-SNAPSHOT'
+archivesBaseName = 'quasar'
+
+repositories {
+    mavenCentral()
+    maven {
+        url = uri("https://oss.sonatype.org/content/groups/public/")
+    }
+    maven {
+        name = "spigot repo"
+        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    }
+}
+
+java{
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing{
+    repositories {
+        maven {
+            name = "sonatype"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials{
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+    publications{
+
+        mavenJava(MavenPublication){
+            groupId = project.group
+            artifactId = rootProject.name
+            version = project.version
+
+            from components.java
+
+            pom{
+                name = rootProject.name
+                description = "A forge-bukkit compatibilty provider library"
+                url = "https://github.com/Singlerr/quasar"
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'singlerr'
+                        name = 'Ryu Seowoong'
+                        email = 'singlerr@naver.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/Singlerr/quasar.git'
+                    developerConnection = 'scm:git:ssh://github.com/Singlerr/quasar.git'
+                    url = "https://github.com/Singlerr/quasar"
+                }
+            }
+
+        }
+    }
+
+}
+
+dependencies {
+    compileOnly('org.spigotmc:spigot-api:1.12.2-R0.1-SNAPSHOT')
+}
